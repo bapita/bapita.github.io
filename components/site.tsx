@@ -2,13 +2,23 @@
 
 import Image from "next/image";
 import { ArrowDown, ArrowRight, CheckCircle2, Download, Menu, Users, X, Code2, BriefcaseBusiness, Layers3, Plane, Video, Guitar } from "lucide-react";
-import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
+import { AnimatePresence, motion, useScroll, useTransform, type Variants } from "motion/react";
 import { useState } from "react";
 import { projects } from "@/data/projects";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }
+const fadeUp: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 24,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
 };
 
 const stagger = { visible: { transition: { staggerChildren: 0.09 } } };
@@ -22,24 +32,24 @@ export function Site() {
 
   return (
     <main>
-      <motion.div className="fixed left-0 top-0 z-[100] h-1 origin-left bg-[var(--accent)]" style={{ scaleX: scrollYProgress }} />
+      <motion.div className="fixed left-0 top-0 z-100 h-1 origin-left bg-(--accent)" style={{ scaleX: scrollYProgress }} />
 
       <header className="fixed left-0 right-0 top-0 z-50 border-b border-slate-200/70 bg-[#fbfaf7]/80 backdrop-blur-xl">
-        <div className="section-shell flex h-[74px] items-center justify-between">
+        <div className="section-shell flex h-18.5 items-center justify-between">
           <a href="#home" onClick={closeMenu} className="group flex items-center gap-3" aria-label="Bapita Roy home">
             <div>
-              <div className="font-display text-[25px] italic leading-none tracking-[-.05em]">Bapita Roy</div>
+              <div className="font-display text-[25px] italic leading-none tracking-tighter">Bapita Roy</div>
               <div className="mt-1 hidden text-[8px] font-semibold uppercase tracking-[.28em] text-slate-500 sm:block">Quality · Technology · Delivery</div>
             </div>
           </a>
 
           <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary navigation">
             {[["About", "about"], ["Journey", "journey"], ["Projects", "projects"], ["Expertise", "expertise"], ["Contact", "contact"]].map(([label, id]) => (
-              <a key={id} href={`#${id}`} className="text-[15px] text-slate-700 transition-colors hover:text-[var(--accent)]">{label}</a>
+              <a key={id} href={`#${id}`} className="text-[15px] text-slate-700 transition-colors hover:text-(--accent)">{label}</a>
             ))}
           </nav>
 
-          <a href="#resume" className="hidden items-center gap-2 rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/10 transition-transform hover:-translate-y-0.5 lg:flex">
+          <a href="#resume" className="hidden items-center gap-2 rounded-full bg-(--accent) px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/10 transition-transform hover:-translate-y-0.5 lg:flex">
             <Download size={17} /> Download Resume
           </a>
 
@@ -136,7 +146,7 @@ export function Site() {
           <div><div className="text-[10px] font-bold uppercase tracking-[.35em] text-[var(--accent)]">My Journey</div><h2 className="font-display mt-4 text-5xl leading-tight md:text-6xl">From quality to delivery.</h2><p className="mt-6 max-w-md leading-7 text-slate-600">A career that evolved from testing software to leading its delivery.</p></div>
           <div className="relative">
             <div className="absolute left-[10px] top-2 bottom-2 w-px bg-slate-200" />
-            {[['QA','Learning to understand software from the user's perspective.'],['Automation','Turning repetitive validation into efficient, reliable automation.'],['QA Leadership','Taking ownership of quality, people and delivery outcomes.'],['Project Management','Expanding the perspective to scope, people, timelines, risks, clients and delivery.'],['Today','Bringing technology, quality, people and business together.']].map(([title,copy],i) => (
+            {[['QA', "Learning to understand software from the user's perspective."],['Automation','Turning repetitive validation into efficient, reliable automation.'],['QA Leadership','Taking ownership of quality, people and delivery outcomes.'],['Project Management','Expanding the perspective to scope, people, timelines, risks, clients and delivery.'],['Today','Bringing technology, quality, people and business together.']].map(([title,copy],i) => (
               <motion.div key={title} initial="hidden" whileInView="visible" viewport={{ once: true, amount: .35 }} variants={fadeUp} className="relative mb-10 pl-12 last:mb-0"><div className="absolute left-0 top-1 flex h-[21px] w-[21px] items-center justify-center rounded-full border-4 border-[var(--paper)] bg-[var(--accent)]"/><div className="text-xs font-bold uppercase tracking-[.22em] text-[var(--accent)]">0{i+1}</div><h3 className="mt-2 font-display text-3xl">{title}</h3><p className="mt-2 max-w-xl leading-7 text-slate-600">{copy}</p></motion.div>
             ))}
           </div>
