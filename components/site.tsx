@@ -1,15 +1,36 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowDown, ArrowRight, CheckCircle2, Download, Menu, Users, X, Code2, BriefcaseBusiness, Layers3, Plane, Video, Guitar } from "lucide-react";
-import { AnimatePresence, motion, useScroll, useTransform, type Variants } from "motion/react";
+import {
+  ArrowDown,
+  ArrowRight,
+  CheckCircle2,
+  Download,
+  Menu,
+  Users,
+  X,
+  Code2,
+  BriefcaseBusiness,
+  Layers3,
+  Plane,
+  Video,
+  Guitar,
+  type LucideIcon,
+} from "lucide-react";
+import {
+  AnimatePresence,
+  motion,
+  useScroll,
+  useTransform,
+  type Variants,
+} from "motion/react";
 import { useState } from "react";
 import { projects } from "@/data/projects";
 
 const fadeUp: Variants = {
   hidden: {
     opacity: 0,
-    y: 24,
+    y: 28,
   },
   visible: {
     opacity: 1,
@@ -107,7 +128,7 @@ export function Site() {
 
         <div className="section-shell relative z-20 pb-5">
           <div className="grid overflow-hidden rounded-3xl border border-slate-200/80 bg-white/80 shadow-[0_18px_60px_rgba(33,53,80,.07)] backdrop-blur md:grid-cols-4">
-            {[
+            {/* {[
               [BriefcaseBusiness, "7+", "Years in QA & Automation"],
               [Layers3, "PM", "Project Management & Delivery"],
               [Layers3, "Multiple", "Web & Mobile Products Delivered"],
@@ -115,7 +136,43 @@ export function Site() {
             ].map(([Icon, big, small], i) => {
               const I = Icon as typeof BriefcaseBusiness;
               return <div key={String(big)} className={`flex items-center gap-4 p-6 ${i ? "border-t border-slate-200 md:border-l md:border-t-0" : ""}`}><I className="shrink-0 text-[var(--accent)]" size={28}/><div><div className="font-display text-2xl font-bold">{big}</div><div className="mt-1 text-xs text-slate-500">{small}</div></div></div>;
-            })}
+            })} */}
+            {(
+  [
+    [BriefcaseBusiness, "7+", "Years in QA & Automation"],
+    [Layers3, "PM", "Project Management & Delivery"],
+    [Layers3, "Multiple", "Web & Mobile Products Delivered"],
+    [Users, "Cross-functional", "Teams & Client Collaboration"],
+  ] as [LucideIcon, string, string][]
+).map(([Icon, big, small], i) => {
+  const I = Icon;
+
+  return (
+    <div
+      key={big}
+      className={`flex items-center gap-4 p-6 ${
+        i
+          ? "border-t border-slate-200 md:border-l md:border-t-0"
+          : ""
+      }`}
+    >
+      <I
+        className="shrink-0 text-[var(--accent)]"
+        size={28}
+      />
+
+      <div>
+        <div className="font-display text-2xl font-bold">
+          {big}
+        </div>
+
+        <div className="mt-1 text-xs text-slate-500">
+          {small}
+        </div>
+      </div>
+    </div>
+  );
+})}
           </div>
         </div>
       </section>
@@ -195,7 +252,54 @@ export function Site() {
       <section id="personal" className="section-shell py-28">
         <div className="grid gap-12 lg:grid-cols-[.7fr_1.3fr] lg:items-end"><div><div className="text-[10px] font-bold uppercase tracking-[.35em] text-[var(--accent)]">Beyond the Projects</div><h2 className="font-display mt-4 text-5xl md:text-6xl">Because there's more to me than Jira tickets.</h2></div><p className="max-w-xl leading-8 text-slate-600">I enjoy the work, but I also love the things that give me new stories, perspectives and creative energy.</p></div>
         <div className="mt-12 grid gap-4 md:grid-cols-3">
-          {[[Guitar,'Guitar','A little music','When I’m away from screens and meetings, you’ll often find me with a guitar.'],[Video,'Vlogging','Documenting moments','I enjoy capturing experiences and turning them into stories.'],[Plane,'Travelling','Exploring','New places, new people and new perspectives.']].map(([Icon,title,sub,copy]) => { const I=Icon as typeof Guitar; return <motion.div key={String(title)} whileHover={{ y: -6 }} className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"><div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-[var(--accent)]"><I size={23}/></div><h3 className="font-display mt-10 text-3xl">{title}</h3><div className="mt-1 text-xs font-bold uppercase tracking-[.2em] text-[var(--accent)]">{sub}</div><p className="mt-5 leading-7 text-slate-600">{copy}</p></motion.div> })}
+          {(
+  [
+    [
+      Guitar,
+      "Guitar",
+      "A little music",
+      "When I’m away from screens and meetings, you’ll often find me with a guitar.",
+    ],
+    [
+      Video,
+      "Vlogging",
+      "Documenting moments",
+      "I enjoy capturing experiences and turning them into stories.",
+    ],
+    [
+      Plane,
+      "Travelling",
+      "Exploring",
+      "New places, new people and new perspectives.",
+    ],
+  ] as [LucideIcon, string, string, string][]
+).map(([Icon, title, sub, copy]) => {
+  const I = Icon;
+
+  return (
+    <motion.div
+      key={title}
+      whileHover={{ y: -6 }}
+      className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm"
+    >
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-[var(--accent)]">
+        <I size={23} />
+      </div>
+
+      <h3 className="font-display mt-10 text-3xl">
+        {title}
+      </h3>
+
+      <div className="mt-1 text-xs font-bold uppercase tracking-[.2em] text-[var(--accent)]">
+        {sub}
+      </div>
+
+      <p className="mt-5 leading-7 text-slate-600">
+        {copy}
+      </p>
+    </motion.div>
+  );
+})}
         </div>
       </section>
 
