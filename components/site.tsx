@@ -319,16 +319,122 @@ const handleContactSubmit = async (
         <div className="mt-9 border-l-2 border-[var(--accent)] pl-5 text-lg italic leading-8 text-slate-600">I don't need to write every line of code to understand the technology behind the product I'm managing.</div>
       </section>
 
-      <section className="bg-[#edf2f6] py-28">
-        <div className="section-shell">
-          <div className="mb-12"><div className="text-[10px] font-bold uppercase tracking-[.35em] text-[var(--accent)]">How I Work</div><h2 className="font-display mt-4 text-5xl md:text-6xl">Understand | Plan | Collaborate | Validate | Automate | Deliver</h2></div>
-          <div className="grid gap-px overflow-hidden rounded-3xl border border-slate-200 bg-slate-200 md:grid-cols-5">
-            {[
-              ['01','Understand','What problem are we solving?'],['02','Plan','What needs to happen, and in what order?'],['03','Collaborate','Who needs to be aligned?'],['04','Validate','Does what we built actually work?'],['05','Automate','Why test manually when we can automate?'],['06','Deliver','Can we release it confidently?']
-            ].map(([n,t,c]) => <motion.div key={n} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: Number(n)*.05 }} className="bg-white p-6"><div className="text-xs font-bold text-[var(--accent)]">{n}</div><h3 className="mt-12 font-display text-2xl">{t}</h3><p className="mt-3 text-sm leading-6 text-slate-600">{c}</p></motion.div>)}
+      <section className="bg-[#edf2f6] py-24 md:py-28">
+  <div className="section-shell">
+
+    {/* Section heading */}
+    <div className="mb-12 max-w-4xl">
+      <div className="text-[10px] font-bold uppercase tracking-[.35em] text-[var(--accent)]">
+        How I Work
+      </div>
+
+      <h2 className="font-display mt-4 text-5xl leading-[1.05] md:text-6xl">
+        From understanding the problem
+        <br className="hidden md:block" />
+        to delivering the solution.
+      </h2>
+
+      <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600">
+        A simple approach that keeps the product, people, quality and
+        delivery moving in the same direction.
+      </p>
+    </div>
+
+    {/* Process */}
+    <div className="grid overflow-hidden rounded-[2rem] border border-slate-200 bg-white md:grid-cols-2 lg:grid-cols-3">
+
+      {[
+        [
+          "01",
+          "Understand",
+          "What problem are we solving?",
+          "Start with the business goal, user need and requirements."
+        ],
+        [
+          "02",
+          "Plan",
+          "What needs to happen?",
+          "Break the work into priorities, milestones and ownership."
+        ],
+        [
+          "03",
+          "Collaborate",
+          "Who needs to be aligned?",
+          "Keep clients, stakeholders, designers, developers and QA connected."
+        ],
+        [
+          "04",
+          "Validate",
+          "Does what we built actually work?",
+          "Challenge assumptions, identify risks and protect product quality."
+        ],
+        [
+          "05",
+          "Automate",
+          "What can we make repeatable?",
+          "Use automation where it improves consistency, feedback and efficiency."
+        ],
+        [
+          "06",
+          "Deliver",
+          "Can we release it confidently?",
+          "Drive execution, remove blockers and keep the focus on the outcome."
+        ],
+      ].map(([number, title, question, copy], index) => (
+        <motion.article
+          key={number}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{
+            duration: 0.55,
+            delay: index * 0.05,
+          }}
+          className={`
+            group relative p-7 md:p-8
+            transition-all duration-300
+            hover:bg-[#f8fafc]
+            ${index % 3 !== 2 ? "lg:border-r border-slate-200" : ""}
+            ${index < 3 ? "lg:border-b border-slate-200" : ""}
+            ${index < 4 ? "md:border-b border-slate-200 lg:border-b-0" : ""}
+          `}
+        >
+          {/* Number */}
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-xs font-bold text-[var(--accent)]">
+              {number}
+            </span>
+
+            <ArrowRight
+              size={17}
+              className="text-slate-300 transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--accent)]"
+            />
           </div>
-        </div>
-      </section>
+
+          {/* Content */}
+          <div className="mt-14">
+            <h3 className="font-display text-3xl text-[var(--ink)]">
+              {title}
+            </h3>
+
+            <p className="mt-3 text-sm font-semibold leading-6 text-slate-700">
+              {question}
+            </p>
+
+            <p className="mt-3 max-w-sm text-sm leading-6 text-slate-500">
+              {copy}
+            </p>
+          </div>
+
+          {/* Hover line */}
+          <div className="absolute bottom-0 left-0 h-[3px] w-0 bg-[var(--accent)] transition-all duration-500 group-hover:w-full" />
+        </motion.article>
+      ))}
+
+    </div>
+
+  </div>
+</section>
 
       <section id="personal" className="section-shell py-28">
         <div className="grid gap-12 lg:grid-cols-[.7fr_1.3fr] lg:items-end"><div><div className="text-[10px] font-bold uppercase tracking-[.35em] text-[var(--accent)]">Beyond the Projects</div><h2 className="font-display mt-4 text-5xl md:text-6xl">Because there's more to me than Jira tickets.</h2></div><p className="max-w-xl leading-8 text-slate-600">I enjoy the work, but I also love the things that give me new stories, perspectives and creative energy.</p></div>
