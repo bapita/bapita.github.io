@@ -24,7 +24,7 @@ import {
   useTransform,
   type Variants,
 } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { projects } from "@/data/projects";
 
 const fadeUp: Variants = {
@@ -46,6 +46,87 @@ const stagger = { visible: { transition: { staggerChildren: 0.09 } } };
 
 export function Site() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+const [isSending, setIsSending] = useState(false);
+const [formStatus, setFormStatus] = useState<"idle" | "success" | "error">("idle");
+
+const [formData, setFormData] = useState({
+  name: "",
+  email: "",
+  message: "",
+});
+
+const openContact = () => {
+  setFormStatus("idle");
+  setContactOpen(true);
+};
+
+const closeContact = () => {
+  if (!isSending) {
+    setContactOpen(false);
+  }
+};
+
+useEffect(() => {
+  const handleEscape = (event: KeyboardEvent) => {
+    if (event.key === "Escape" && contactOpen && !isSending) {
+      setContactOpen(false);
+    }
+  };
+
+  document.addEventListener("keydown", handleEscape);
+
+  return () => {
+    document.removeEventListener("keydown", handleEscape);
+  };
+}, [contactOpen, isSending]);
+
+const handleFormChange = (
+  event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+) => {
+  const { name, value } = event.target;
+
+  setFormData((previous) => ({
+    ...previous,
+    [name]: value,
+  }));
+};
+
+const handleContactSubmit = async (
+  event: React.FormEvent<HTMLFormElement>
+) => {
+  event.preventDefault();
+
+  setIsSending(true);
+  setFormStatus("idle");
+
+  try {
+    const response = await fetch("https://formspree.io/f/xqpkvqqa", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to send message");
+    }
+
+    setFormStatus("success");
+
+    setFormData({
+      name: "",
+      email: "",
+      message: "",
+    });
+  } catch {
+    setFormStatus("error");
+  } finally {
+    setIsSending(false);
+  }
+};
   const { scrollYProgress } = useScroll();
   const heroY = useTransform(scrollYProgress, [0, 0.22], [0, -70]);
 
@@ -96,8 +177,8 @@ export function Site() {
         <div className="section-shell grid min-h-[760px] items-center gap-6 py-16 lg:grid-cols-[1.03fr_.97fr] lg:py-12">
           <motion.div initial="hidden" animate="visible" variants={stagger} className="relative z-10 pb-10 lg:pb-0">
             <motion.div variants={fadeUp} className="mb-5 text-[11px] font-bold uppercase tracking-[.35em] text-[var(--accent)]">Project Manager · QA & Automation</motion.div>
-            <motion.h1 variants={fadeUp} className="font-display max-w-[690px] text-[68px] leading-[.95] sm:text-[82px] lg:text-[88px]">I understand what happens <span className="text-[var(--accent)]">behind the project.</span></motion.h1>
-            <motion.p variants={fadeUp} className="mt-7 max-w-[650px] text-[18px] leading-8 text-slate-600">I started my career in QA and Automation and evolved into Project Management — bringing together technology, quality, people and delivery to build better software.</motion.p>
+            <motion.h1 variants={fadeUp} className="font-display max-w-[690px] text-[36px] leading-[.95] sm:text-[48px] lg:text-[60px]">Bridging Technology, Quality <span className="text-[var(--accent)]">& Project Delivery.</span></motion.h1>
+            <motion.p variants={fadeUp} className="mt-7 max-w-[650px] text-[18px] leading-8 text-slate-600">A Project Manager with a background in QA and Automation, bringing a technology-first perspective to software delivery.</motion.p>
             <motion.div variants={fadeUp} className="mt-9 flex flex-wrap gap-3">
               <a href="#journey" className="group inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-6 py-3.5 text-sm font-semibold text-white shadow-xl shadow-blue-900/10 transition hover:-translate-y-0.5">Explore My Journey <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" /></a>
               <a href="#projects" className="group inline-flex items-center gap-2 rounded-full border border-[var(--accent)]/35 bg-white/60 px-6 py-3.5 text-sm font-semibold text-[var(--accent)] transition hover:-translate-y-0.5">View My Work <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" /></a>
@@ -240,10 +321,10 @@ export function Site() {
 
       <section className="bg-[#edf2f6] py-28">
         <div className="section-shell">
-          <div className="mb-12"><div className="text-[10px] font-bold uppercase tracking-[.35em] text-[var(--accent)]">How I Work</div><h2 className="font-display mt-4 text-5xl md:text-6xl">Understand → Plan → Collaborate → Validate → Deliver</h2></div>
+          <div className="mb-12"><div className="text-[10px] font-bold uppercase tracking-[.35em] text-[var(--accent)]">How I Work</div><h2 className="font-display mt-4 text-5xl md:text-6xl">Understand | Plan | Collaborate | Validate | Automate | Deliver</h2></div>
           <div className="grid gap-px overflow-hidden rounded-3xl border border-slate-200 bg-slate-200 md:grid-cols-5">
             {[
-              ['01','Understand','What problem are we solving?'],['02','Plan','What needs to happen, and in what order?'],['03','Collaborate','Who needs to be aligned?'],['04','Validate','Does what we built actually work?'],['05','Deliver','Can we release it confidently?']
+              ['01','Understand','What problem are we solving?'],['02','Plan','What needs to happen, and in what order?'],['03','Collaborate','Who needs to be aligned?'],['04','Validate','Does what we built actually work?'],['05','Automate','Why test manually when we can automate?'],['06','Deliver','Can we release it confidently?']
             ].map(([n,t,c]) => <motion.div key={n} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: Number(n)*.05 }} className="bg-white p-6"><div className="text-xs font-bold text-[var(--accent)]">{n}</div><h3 className="mt-12 font-display text-2xl">{t}</h3><p className="mt-3 text-sm leading-6 text-slate-600">{c}</p></motion.div>)}
           </div>
         </div>
@@ -308,8 +389,266 @@ export function Site() {
       </section>
 
       <section id="contact" className="section-shell py-28">
-        <div className="rounded-[2rem] border border-slate-200 bg-white p-9 md:p-14"><div className="text-[10px] font-bold uppercase tracking-[.35em] text-[var(--accent)]">Let's Connect</div><h2 className="font-display mt-4 max-w-3xl text-6xl leading-tight md:text-7xl">Let's build something meaningful.</h2><p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">Have an opportunity, a project, an idea — or simply want to connect?</p><div className="mt-8 flex flex-wrap gap-3"><a href="mailto:hello@example.com" className="group inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-6 py-3.5 text-sm font-semibold text-white">Let's Talk <ArrowRight size={17} className="transition-transform group-hover:translate-x-1"/></a><a href="#home" className="inline-flex items-center gap-2 rounded-full border border-slate-300 px-6 py-3.5 text-sm font-semibold text-slate-700">Back to top <ArrowDown size={16} className="rotate-180"/></a></div></div>
-      </section>
+  <div className="rounded-[2rem] border border-slate-200 bg-white p-9 md:p-14">
+    <div className="text-[10px] font-bold uppercase tracking-[.35em] text-[var(--accent)]">
+      Let's Connect
+    </div>
+
+    <h2 className="font-display mt-4 max-w-3xl text-6xl leading-tight md:text-7xl">
+      Let's build something meaningful.
+    </h2>
+
+    <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
+      Have an opportunity, a project, an idea - or simply want to connect?
+    </p>
+
+    <div className="mt-8 flex flex-wrap gap-3">
+      <button
+        type="button"
+        onClick={openContact}
+        className="group inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-6 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+      >
+        Let's Talk
+        <ArrowRight
+          size={17}
+          className="transition-transform group-hover:translate-x-1"
+        />
+      </button>
+
+      <a
+        href="#home"
+        className="inline-flex items-center gap-2 rounded-full border border-slate-300 px-6 py-3.5 text-sm font-semibold text-slate-700"
+      >
+        Back to top
+        <ArrowDown size={16} className="rotate-180" />
+      </a>
+    </div>
+  </div>
+</section>
+<AnimatePresence>
+  {contactOpen && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-sm"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          closeContact();
+        }
+      }}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 25, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 15, scale: 0.98 }}
+        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+        className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-[2rem] bg-[#fbfaf7] shadow-2xl"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="contact-modal-title"
+      >
+        <button
+          type="button"
+          onClick={closeContact}
+          disabled={isSending}
+          aria-label="Close contact form"
+          className="absolute right-5 top-5 z-10 rounded-full border border-slate-200 bg-white p-2 text-slate-500 transition hover:border-slate-300 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <X size={20} />
+        </button>
+
+        <div className="grid md:grid-cols-[.8fr_1.2fr]">
+          {/* Contact information */}
+          <div className="bg-[#15243d] p-8 text-white md:rounded-l-[2rem] md:p-10">
+            <div className="text-[10px] font-bold uppercase tracking-[.35em] text-blue-300">
+              Get in touch
+            </div>
+
+            <h2
+              id="contact-modal-title"
+              className="font-display mt-5 text-4xl leading-tight"
+            >
+              Let's talk.
+            </h2>
+
+            <p className="mt-5 text-sm leading-7 text-slate-300">
+              Whether you have a project, an opportunity or simply want to
+              connect, I'd be happy to hear from you.
+            </p>
+
+            <div className="mt-10 space-y-5">
+              <a
+                href="mailto:bapitaroy14@gmail.com"
+                className="group block border-b border-white/10 pb-5"
+              >
+                <div className="text-[9px] font-bold uppercase tracking-[.25em] text-slate-400">
+                  Email
+                </div>
+                <div className="mt-2 text-sm text-white transition-colors group-hover:text-blue-300">
+                  bapitaroy14@gmail.com
+                </div>
+              </a>
+
+              <a
+                href="tel:+919007734205"
+                className="group block border-b border-white/10 pb-5"
+              >
+                <div className="text-[9px] font-bold uppercase tracking-[.25em] text-slate-400">
+                  Phone
+                </div>
+                <div className="mt-2 text-sm text-white transition-colors group-hover:text-blue-300">
+                  +91 9007734205
+                </div>
+              </a>
+
+              <a
+                href="https://www.linkedin.com/in/bapita-roy-b4794980/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block"
+              >
+                <div className="text-[9px] font-bold uppercase tracking-[.25em] text-slate-400">
+                  LinkedIn
+                </div>
+                <div className="mt-2 text-sm text-white transition-colors group-hover:text-blue-300">
+                  Connect with me on LinkedIn
+                </div>
+              </a>
+            </div>
+          </div>
+
+          {/* Contact form */}
+          <div className="p-8 md:p-10">
+            {formStatus === "success" ? (
+              <div className="flex min-h-[430px] flex-col items-center justify-center text-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-[var(--accent)]">
+                  <CheckCircle2 size={32} />
+                </div>
+
+                <h3 className="font-display mt-6 text-3xl text-[var(--ink)]">
+                  Message sent!
+                </h3>
+
+                <p className="mt-3 max-w-sm text-sm leading-6 text-slate-600">
+                  Thank you for reaching out. Your message has been sent
+                  successfully. I'll get back to you as soon as possible.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={closeContact}
+                  className="mt-7 rounded-full bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                >
+                  Close
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="text-[10px] font-bold uppercase tracking-[.35em] text-[var(--accent)]">
+                  Send a message
+                </div>
+
+                <h3 className="font-display mt-4 text-3xl text-[var(--ink)]">
+                  How can I help?
+                </h3>
+
+                <form
+                  onSubmit={handleContactSubmit}
+                  className="mt-7 space-y-5"
+                >
+                  <div>
+                    <label
+                      htmlFor="contact-name"
+                      className="mb-2 block text-xs font-semibold text-slate-700"
+                    >
+                      Name
+                    </label>
+
+                    <input
+                      id="contact-name"
+                      name="name"
+                      type="text"
+                      required
+                      autoComplete="name"
+                      value={formData.name}
+                      onChange={handleFormChange}
+                      placeholder="Your name"
+                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[var(--accent)] focus:ring-4 focus:ring-blue-100"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="contact-email"
+                      className="mb-2 block text-xs font-semibold text-slate-700"
+                    >
+                      Email
+                    </label>
+
+                    <input
+                      id="contact-email"
+                      name="email"
+                      type="email"
+                      required
+                      autoComplete="email"
+                      value={formData.email}
+                      onChange={handleFormChange}
+                      placeholder="you@example.com"
+                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[var(--accent)] focus:ring-4 focus:ring-blue-100"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="contact-message"
+                      className="mb-2 block text-xs font-semibold text-slate-700"
+                    >
+                      Message
+                    </label>
+
+                    <textarea
+                      id="contact-message"
+                      name="message"
+                      required
+                      rows={5}
+                      value={formData.message}
+                      onChange={handleFormChange}
+                      placeholder="Tell me a little about your project or opportunity..."
+                      className="w-full resize-none rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[var(--accent)] focus:ring-4 focus:ring-blue-100"
+                    />
+                  </div>
+
+                  {formStatus === "error" && (
+                    <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-5 text-red-700">
+                      Something went wrong while sending your message. Please
+                      try again or contact me directly by email.
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={isSending}
+                    className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-900/10 transition hover:-translate-y-0.5 hover:bg-[var(--accent-dark)] disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    {isSending ? "Sending..." : "Send Message"}
+
+                    {!isSending && (
+                      <ArrowRight
+                        size={17}
+                        className="transition-transform group-hover:translate-x-1"
+                      />
+                    )}
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
 
       <footer className="border-t border-slate-200 py-10"><div className="section-shell flex flex-col justify-between gap-4 text-xs text-slate-500 sm:flex-row"><div><span className="font-semibold text-slate-700">Bapita Roy</span> · Project Manager · QA & Automation · Technology & Software Delivery</div><div>© {new Date().getFullYear()} Bapita Roy</div></div></footer>
     </main>
